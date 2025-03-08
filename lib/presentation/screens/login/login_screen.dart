@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:technical_test_double_v_partners/presentation/screens/screens.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -16,7 +18,7 @@ class LoginScreen extends StatelessWidget {
         children: [
           TextButton(
             onPressed: (){
-             
+              context.pushNamed(ProfileScreen.name);
             },
             child:Text('Go to sign up screen')
           )
