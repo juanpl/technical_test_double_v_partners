@@ -84,10 +84,8 @@ class _RegisterForm extends StatelessWidget {
             obscureText: true,
           ),
           const SizedBox(height: 20,),
-          FilledButton.tonalIcon(
-            onPressed: (){}, 
-            icon: const Icon(Icons.save),
-            label: const Text('Crear usuario'),
+          CustomButton(
+            text: 'Suscribirse',
           )
         ]
       )
