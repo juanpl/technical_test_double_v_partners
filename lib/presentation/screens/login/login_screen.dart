@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:technical_test_double_v_partners/presentation/screens/screens.dart';
+import 'package:technical_test_double_v_partners/presentation/widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
 
@@ -11,16 +12,66 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login Screen'),
+      body: _LoginView(),
+    );
+  }
+}
+
+class _LoginView extends StatelessWidget {
+  const _LoginView();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding:  const EdgeInsets.symmetric(horizontal: 10),
+        child: Center(
+          child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FlutterLogo( size: 100),
+              SizedBox(
+                height: 20
+              ),
+              _LoginForm(),
+            ],
+          ),
+                ),
+        ),
       ),
-      body: Column(
+    );
+  }
+}
+
+class _LoginForm extends StatelessWidget {
+  const _LoginForm();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextButton(
-            onPressed: (){
-              context.pushNamed(ProfileScreen.name);
-            },
-            child:Text('Go to sign up screen')
+          SizedBox(
+            height: 20
+          ),
+          CustomTextFormField(
+            label: 'Usuario',
+            icon: Icons.mail,
+          ),
+          SizedBox(
+            height: 20
+          ),
+          CustomTextFormField(
+            label: 'Contraseña',
+            icon: Icons.lock,
+          ),
+          SizedBox(
+            height: 20
+          ),
+          CustomButton(
+            text: 'Ingresar'
           )
         ],
       ),
