@@ -53,11 +53,37 @@ class _RegisterForm extends StatelessWidget {
     return Form(
       child: Column(
         children: [
-          CustomTextFormField(),
+          CustomTextFormField(
+            label: 'Nombre',
+            icon: Icons.person,
+          ),
           const SizedBox(height: 10,),
-          CustomTextFormField(),
+          CustomTextFormField(
+            icon: Icons.person,
+            label: 'Apellido'
+          ),
           const SizedBox(height: 20,),
-
+          CustomTextFormField(
+            icon: Icons.calendar_month,
+            label: 'Fecha de nacimiento'
+          ),
+          const SizedBox(height: 20,),
+          CustomTextFormField(
+            icon: Icons.location_city,
+            label: 'Dirección'
+          ),
+          const SizedBox(height: 20,),
+          CustomTextFormField(
+            icon: Icons.mail,
+            label: 'Correo Electrónico'
+          ),
+          const SizedBox(height: 20,),
+          CustomTextFormField(
+            icon: Icons.lock,
+            label: 'Contraseña',
+            obscureText: true,
+          ),
+          const SizedBox(height: 20,),
           FilledButton.tonalIcon(
             onPressed: (){}, 
             icon: const Icon(Icons.save),
