@@ -2,7 +2,23 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
 
-  const CustomTextFormField({super.key});
+  final String? label;
+  final String? hint;
+  final String? errorMessage;
+  final IconData? icon;
+  final Function(String)? onChange;
+  final String? Function(String?)? validator; 
+  
+
+  const CustomTextFormField({
+    super.key, 
+    this.label, 
+    this.hint, 
+    this.errorMessage, 
+    this.onChange, 
+    this.validator, 
+    this.icon
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +31,8 @@ class CustomTextFormField extends StatelessWidget {
 
 
     return TextFormField(
-      onChanged:  (value) {
-        print('value: $value');
-      },
-      validator: (value){
-        if ( value == null) return 'Campo es requerido';
-        if (value.isEmpty) return 'Campo es requerido';
-        if (value.trim().isEmpty) return 'Campo es requerido';
-
-        return null;
-      },
+      onChanged:  onChange,
+      validator: validator,
 
       decoration: InputDecoration(
         enabledBorder: border,
@@ -33,9 +41,10 @@ class CustomTextFormField extends StatelessWidget {
         focusedErrorBorder: border.copyWith(borderSide: BorderSide(color: Colors.redAccent)),
         
         isDense: true,
-        icon: Icon(Icons.alternate_email),
-        label: Text('Cualquie cosa'),
-        errorText: 'Este es el error text'
+        icon: icon != null ? Icon(icon) : null,
+        label: label != null ? Text(label!) : null,
+        hintText: hint,
+        errorText: errorMessage
       ),
     );
   }
