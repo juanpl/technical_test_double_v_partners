@@ -10,19 +10,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login Screen'),
-      ),
-      body: Column(
-        children: [
-          TextButton(
-            onPressed: (){
-              context.pushNamed(ProfileScreen.name);
-            },
-            child:Text('Go to sign up screen')
-          )
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          children: [
+            Text('Prueba Tecnica', style: TextStyle(color: Colors.black, fontSize: 18)),
+            Image.asset('assets/images/double_v_partners_cover.jpeg'),
+            
+            /*TextButton(
+              onPressed: (){
+                context.pushNamed(ProfileScreen.name);
+              },
+              child:Text('Go to sign up screen')
+            )*/
+          ],
+        ),
       ),
     );
   }
