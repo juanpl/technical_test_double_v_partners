@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:technical_test_double_v_partners/presentation/screens/screens.dart';
 import 'package:technical_test_double_v_partners/presentation/widgets/widgets.dart';
 
 class SignUpScreen extends StatelessWidget {
