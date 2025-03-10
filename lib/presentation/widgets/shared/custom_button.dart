@@ -4,13 +4,13 @@ class CustomButton extends StatelessWidget {
 
   final String text;
   final bool? enable;
-  final Function()? function;
+  final Function()? onPress;
 
   const CustomButton({
     super.key, 
     required this.text, 
     this.enable=true, 
-    this.function,
+    this.onPress,
   });
 
   @override
@@ -19,9 +19,7 @@ class CustomButton extends StatelessWidget {
       color: enable == true ? Colors.red : Colors.grey,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
-        onTap: enable == true ?() {
-          function;
-        }:null,
+        onTap: enable == true ? onPress:null,
         borderRadius: BorderRadius.circular(10),
         child: Container(
           width: 200,
