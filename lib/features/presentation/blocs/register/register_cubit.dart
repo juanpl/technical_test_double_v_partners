@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:technical_test_double_v_partners/infrastructure/inputs/inputs.dart';
+import 'package:technical_test_double_v_partners/features/domain/inputs/inputs.dart';
 
 part 'register_state.dart';
 
@@ -119,13 +119,17 @@ class RegisterCubit extends Cubit<RegisterFormState> {
 
   void addNewAddress(){
    
+    final address = Address.dirty('');
     List<String> newListAddres = List.from(state.addressList)..add(state.address.value);
    
     if(state.address.value.length>5){
       emit(
         state.copyWith(
           addressList: newListAddres,
+          address: address,
           stateErrorListAdrees: false,
+          andressInputVisibility: false
+
         )
       );
     }
