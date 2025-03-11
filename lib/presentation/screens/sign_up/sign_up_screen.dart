@@ -51,13 +51,16 @@ class SignUpScreen extends StatelessWidget {
 
 class _RegisterForm extends StatelessWidget {
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
 
     final TextEditingController _dateController = TextEditingController();
     final registerCubit = context.watch<RegisterCubit>();
+    
+    final firstName = registerCubit.state.firstName;
+    final lastName = registerCubit.state.lastName;
+    final birthhDate = registerCubit.state.birthdate;
+    final password = registerCubit.state.password;
     
     context.select((RegisterCubit value){
       _dateController.text = value.state.birthdate.value;
@@ -66,19 +69,24 @@ class _RegisterForm extends StatelessWidget {
     return Form(
       child: Column(
         children: [
+
           CustomTextFormField(
             onChange: (value){
               registerCubit.firstNameChanged(value);
-              _formKey.currentState?.validate();
             },
+            errorMessage: firstName.isPure || firstName.isValid
+              ? null
+              : 'Usuario no válido'
+            ,
             label: 'Nombre',
             icon: Icons.person,
           ),
+
           const SizedBox(height: 10,),
+
           CustomTextFormField(
             onChange: (value){
               registerCubit.lastNameChanged(value);
-              _formKey.currentState?.validate();
             },
             icon: Icons.person,
             label: 'Apellido'
@@ -101,7 +109,6 @@ class _RegisterForm extends StatelessWidget {
           CustomTextFormField(
             onChange: (value){
               registerCubit.emailChanged(value);
-              _formKey.currentState?.validate();
             },
             icon: Icons.mail,
             label: 'Correo Electrónico'
@@ -110,75 +117,101 @@ class _RegisterForm extends StatelessWidget {
           CustomTextFormField(
             onChange: (value){
               registerCubit.passwordChanged(value);
-              _formKey.currentState?.validate();
             },
             icon: Icons.lock,
             label: 'Contraseña',
             obscureText: true,
           ),
           const SizedBox(height: 20,),
-          BlocBuilder<RegisterCubit, RegisterFormState>(
-            builder: (context, state) {
-              return 
-              state.andressInputVisibility ?
-              Row(
-                children:[
-                  Expanded(
-                    flex: 14,
-                    child: CustomTextFormField(
-                      onChange: (value){
-                        registerCubit.addressChanged(value);
-                        _formKey.currentState?.validate();
-                      },
-                      icon: Icons.apartment,
-                      label: 'Dirección',
-                      readOnly: true,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Icon(Icons.check_circle, size: 40, color: Colors.green)
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(width: 5,)
-                  )
 
-                ] 
-              ):Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children:[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      child: Icon(Icons.apartment, size: 18)
-                    )
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      'Agregar dirección', 
-                      style: TextStyle(color: Colors.black87, fontSize: 16),
-                      textAlign: TextAlign.end,
-                    )
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Icon(Icons.add_circle, size: 40, color: Colors.blue)
-                  ),
+          registerCubit.state.andressInputVisibility ?
+          Row(
+            children:[
+              Expanded(
+                flex: 14,
+                child: CustomTextFormField(
+                  onChange: (value){
+                    registerCubit.addressChanged(value);
+                  },
+                  icon: Icons.apartment,
+                  label: 'Dirección',
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: CustomPushIcon(
+                  color: Colors.green,
+                  icon: Icons.add_circle,
+                  enable: registerCubit.state.address.length>4,
+                  onPress: () {
+                    registerCubit.setShowAddressInput(false);
+                    registerCubit.addNewAddress();
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: SizedBox(width: 5,)
+              )
 
-                ] 
-              );
+            ] 
+          ):Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children:[
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  child: Icon(Icons.apartment, size: 18)
+                )
+              ),
+              Expanded(
+                flex: 5,
+                child: Text(
+                  'Agregar dirección', 
+                  style: TextStyle(color: Colors.black87, fontSize: 16),
+                  textAlign: TextAlign.end,
+                )
+              ),
+              Expanded(
+                flex: 1,
+                child: CustomPushIcon(
+                  icon: Icons.add_circle,
+                  onPress: () {
+                    registerCubit.setShowAddressInput(true);
+                  },
+                )
+              ),
+
+            ] 
+          ),
+          const SizedBox(height: 20,),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Lista de direcciones:', 
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.start,
+            ),
+          ),
+          const SizedBox(height: 10,),
+
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: registerCubit.state.addressList.length, // Número de elementos en la lista
+            itemBuilder: (context, index) {
+              return Row (children: [
+                Icon(Icons.apartment, size: 16),
+                Text(registerCubit.state.addressList[index], style: TextStyle(fontSize: 16),)
+              ],);
             },
           ),
-
+          
           const SizedBox(height: 20,),
           CustomButton(
             onPress: (){
               registerCubit.onSubmit();
-              //final isValid = _formKey.currentState!.validate();
-              //( !isValid ) return;
             },
             text: 'Suscribirse',
 

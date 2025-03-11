@@ -11,6 +11,13 @@ class FirstName extends FormzInput<String, FirstNameError> {
   // Call super.dirty to represent a modified form input.
   const FirstName.dirty(String value) : super.dirty(value);
 
+  String? get errorMessage {
+    if(isValid || isPure) return null;
+
+    if(displayError == FirstNameError.empty) return 'El campo es requerido';
+    
+  }
+
   // Override validator to handle validating a given input value.
   @override
   FirstNameError? validator(String value) {
