@@ -12,6 +12,7 @@ class CustomTextFormField extends StatelessWidget {
   final bool readOnly;
   final Function()? onTap;
   final TextEditingController? controller;
+  final String? helperText;
   
 
   const CustomTextFormField({
@@ -25,7 +26,8 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText=false,
     this.readOnly=false,
     this.onTap,
-    this.controller
+    this.controller,
+    this.helperText
   });
 
   @override
@@ -57,9 +59,7 @@ class CustomTextFormField extends StatelessWidget {
         label: label != null ? Text(label!) : null,
         hintText: hint,
         errorText: errorMessage,
-
-      
-        
+        helperText: helperText     
       ),
     );
   }

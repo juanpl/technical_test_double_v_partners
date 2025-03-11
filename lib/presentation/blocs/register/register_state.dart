@@ -9,11 +9,12 @@ class RegisterFormState extends Equatable {
   final FirstName firstName;
   final LastName lastName;
   final Birthdate birthdate;
-  final String email;
+  final Email email;
   final Password password;
-  final String address;
+  final Address address;
   final bool andressInputVisibility;
   final List<String> addressList;
+  final bool stateErrorListAdrees;
 
   const RegisterFormState({
     this.formStatus = FormStatus.invalid, 
@@ -21,11 +22,12 @@ class RegisterFormState extends Equatable {
     this.firstName = const FirstName.pure() , 
     this.lastName = const LastName.pure(), 
     this.birthdate = const Birthdate.pure(), 
-    this.email = '', 
+    this.email = const Email.pure(), 
     this.password = const Password.pure(), 
-    this.address = '',
+    this.address = const Address.pure(),
     this.andressInputVisibility = false,
     this.addressList = const [],
+    this.stateErrorListAdrees = false
   });
 
   RegisterFormState copyWith({
@@ -34,11 +36,12 @@ class RegisterFormState extends Equatable {
     FirstName? firstName,
     LastName? lastName,
     Birthdate? birthdate,
-    String? email,
+    Email? email,
     Password? password,
-    String? address,
+    Address? address,
     bool? andressInputVisibility,
-    List<String>? addressList
+    List<String>? addressList,
+    bool? stateErrorListAdrees,
   }) => RegisterFormState(
     formStatus: formStatus ?? this.formStatus,
     isValid: isValid ?? this.isValid,
@@ -49,11 +52,12 @@ class RegisterFormState extends Equatable {
     password: password ?? this.password,
     address: address ?? this.address,
     andressInputVisibility: andressInputVisibility ?? this.andressInputVisibility,
-    addressList: addressList ?? this.addressList
+    addressList: addressList ?? this.addressList,
+    stateErrorListAdrees: stateErrorListAdrees ?? this.stateErrorListAdrees
   );
     
 
   @override
-  List<Object> get props => [formStatus, isValid, firstName, lastName, birthdate, email, password, address, andressInputVisibility, addressList];
+  List<Object> get props => [formStatus, isValid, firstName, lastName, birthdate, email, password, address, andressInputVisibility, addressList, email, stateErrorListAdrees];
 }
 

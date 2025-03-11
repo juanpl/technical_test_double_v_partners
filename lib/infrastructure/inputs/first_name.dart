@@ -13,15 +13,12 @@ class FirstName extends FormzInput<String, FirstNameError> {
 
   String? get errorMessage {
     if(isValid || isPure) return null;
-
     if(displayError == FirstNameError.empty) return 'El campo es requerido';
-    
   }
 
   // Override validator to handle validating a given input value.
   @override
   FirstNameError? validator(String value) {
-
     if (value.isEmpty || value.trim().isEmpty) return FirstNameError.empty;
 
     return null;

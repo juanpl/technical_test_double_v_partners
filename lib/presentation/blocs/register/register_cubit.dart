@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
-import 'package:technical_test_double_v_partners/infrastructure/inputs/birthDate.dart';
 import 'package:technical_test_double_v_partners/infrastructure/inputs/inputs.dart';
 
 part 'register_state.dart';
@@ -10,16 +9,32 @@ class RegisterCubit extends Cubit<RegisterFormState> {
   RegisterCubit() : super(const RegisterFormState());
 
   void onSubmit() {
+
+    final isValid = Formz.validate([
+      state.firstName,
+      state.lastName,
+      state.password,
+      state.birthdate,
+      state.email,
+    ]);
+
+    final stateErrorListAdrees = state.addressList.isEmpty;
+
+    final bothAreValid = isValid && !stateErrorListAdrees;
+
     emit(
       state.copyWith(
         formStatus: FormStatus.validating,
         firstName: FirstName.dirty(state.firstName.value),
+        lastName: LastName.dirty(state.lastName.value),
+        birthdate: Birthdate.dirty(state.birthdate.value),
         password: Password.dirty(state.password.value),
-
-        isValid: Formz.validate([state.firstName, state.lastName, state.password, state.birthdate]) 
+        email: Email.dirty(state.email.value),
+        stateErrorListAdrees: stateErrorListAdrees,
+        isValid: bothAreValid
       )
     );
-    print('Submit: $state');
+
   }
 
   void firstNameChanged( String value){
@@ -29,7 +44,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     emit(
       state.copyWith(
         firstName: firstName,
-        isValid: Formz.validate([firstName, state.lastName, state.password, state.birthdate])
+        isValid: Formz.validate([firstName, state.lastName, state.password, state.birthdate, state.email]) 
       )
     );
   }
@@ -41,7 +56,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     emit(
       state.copyWith(
         lastName: lastName,
-        isValid: Formz.validate([lastName, state.firstName, state.password, state.birthdate])
+        isValid:Formz.validate([state.firstName, lastName, state.password, state.birthdate, state.email]) 
       )
     );
   }
@@ -60,9 +75,13 @@ class RegisterCubit extends Cubit<RegisterFormState> {
   }
 
   void emailChanged( String value){
+
+    final email = Email.dirty(value); 
+
     emit(
       state.copyWith(
-        email: value,
+        email: email,
+        isValid:Formz.validate([state.firstName, state.lastName, state.password, state.birthdate, email]) 
       )
     );
   }
@@ -74,15 +93,18 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     emit(
       state.copyWith(
         password: password,
-        isValid: Formz.validate([password, state.firstName, state.lastName, state.birthdate])
+        isValid: Formz.validate([state.firstName, state.lastName, password, state.birthdate, state.email]) 
       )
     );
   }
 
   void addressChanged( String value){
+
+    final address = Address.dirty(value);
+
     emit(
       state.copyWith(
-        address: value,
+        address: address,
       )
     );
   }
@@ -97,15 +119,18 @@ class RegisterCubit extends Cubit<RegisterFormState> {
 
   void addNewAddress(){
    
-    List<String> newListAddres = List.from(state.addressList)..add(state.address);
-    print(newListAddres);
+    List<String> newListAddres = List.from(state.addressList)..add(state.address.value);
+   
+    if(state.address.value.length>5){
+      emit(
+        state.copyWith(
+          addressList: newListAddres,
+          stateErrorListAdrees: false,
+        )
+      );
+    }
 
-    emit(
-      state.copyWith(
-        addressList: newListAddres,
-        address: ''
-      )
-    );
+
   }
 }
 

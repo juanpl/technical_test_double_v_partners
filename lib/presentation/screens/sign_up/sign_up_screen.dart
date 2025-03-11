@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:technical_test_double_v_partners/presentation/blocs/register/register_cubit.dart';
 import 'package:technical_test_double_v_partners/presentation/widgets/widgets.dart';
 
@@ -61,6 +62,8 @@ class _RegisterForm extends StatelessWidget {
     final lastName = registerCubit.state.lastName;
     final birthhDate = registerCubit.state.birthdate;
     final password = registerCubit.state.password;
+    final email = registerCubit.state.email;
+    final address = registerCubit.state.address;
     
     context.select((RegisterCubit value){
       _dateController.text = value.state.birthdate.value;
@@ -74,10 +77,7 @@ class _RegisterForm extends StatelessWidget {
             onChange: (value){
               registerCubit.firstNameChanged(value);
             },
-            errorMessage: firstName.isPure || firstName.isValid
-              ? null
-              : 'Usuario no válido'
-            ,
+            errorMessage: firstName.errorMessage,
             label: 'Nombre',
             icon: Icons.person,
           ),
@@ -88,36 +88,47 @@ class _RegisterForm extends StatelessWidget {
             onChange: (value){
               registerCubit.lastNameChanged(value);
             },
+            errorMessage: lastName.errorMessage,
             icon: Icons.person,
             label: 'Apellido'
           ),
+
           const SizedBox(height: 20,),
+
           CustomTextFormField(
             controller: _dateController,
+
             onTap: () async {
              DateTime? date =  await _selectDate(context);
              if(date != null){
               registerCubit.birthdateChanged(date);
-
              }
             },
+
+            errorMessage: birthhDate.errorMessage,
             icon: Icons.calendar_month,
             label: 'Fecha de nacimiento',
             readOnly: true,
           ),
+
           const SizedBox(height: 20,),
+
           CustomTextFormField(
             onChange: (value){
               registerCubit.emailChanged(value);
             },
             icon: Icons.mail,
-            label: 'Correo Electrónico'
+            label: 'Correo Electrónico',
+            errorMessage: email.errorMessage,
           ),
+
           const SizedBox(height: 20,),
+
           CustomTextFormField(
             onChange: (value){
               registerCubit.passwordChanged(value);
             },
+            errorMessage: password.errorMessage,
             icon: Icons.lock,
             label: 'Contraseña',
             obscureText: true,
@@ -135,6 +146,9 @@ class _RegisterForm extends StatelessWidget {
                   },
                   icon: Icons.apartment,
                   label: 'Dirección',
+                  errorMessage: address.errorMessage,
+                  helperText: 'Precione "+" para agregar la dirección',
+
                 ),
               ),
               Expanded(
@@ -142,9 +156,7 @@ class _RegisterForm extends StatelessWidget {
                 child: CustomPushIcon(
                   color: Colors.green,
                   icon: Icons.add_circle,
-                  enable: registerCubit.state.address.length>4,
                   onPress: () {
-                    registerCubit.setShowAddressInput(false);
                     registerCubit.addNewAddress();
                   },
                 ),
@@ -194,6 +206,11 @@ class _RegisterForm extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
           ),
+
+          registerCubit.state.stateErrorListAdrees ?
+          Text('Se debe tener minimo una dirección inscrita', style: TextStyle(fontSize: 14, color: Colors.red),):
+          SizedBox(),
+
           const SizedBox(height: 10,),
 
           ListView.builder(
@@ -212,6 +229,9 @@ class _RegisterForm extends StatelessWidget {
           CustomButton(
             onPress: (){
               registerCubit.onSubmit();
+              if(registerCubit.state.isValid){
+                context.push('/profile_features');
+              }
             },
             text: 'Suscribirse',
 

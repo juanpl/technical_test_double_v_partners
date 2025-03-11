@@ -11,6 +11,11 @@ class LastName extends FormzInput<String, LastNameError> {
   // Call super.dirty to represent a modified form input.
   const LastName.dirty(String value) : super.dirty(value);
 
+  String? get errorMessage {
+    if(isValid || isPure) return null;
+    if(displayError == LastNameError.empty) return 'El campo es requerido';
+  }
+
   // Override validator to handle validating a given input value.
   @override
   LastNameError? validator(String value) {
