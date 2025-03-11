@@ -9,6 +9,10 @@ class CustomTextFormField extends StatelessWidget {
   final Function(String)? onChange;
   final String? Function(String?)? validator;
   final bool obscureText;
+  final bool readOnly;
+  final Function()? onTap;
+  final TextEditingController? controller;
+  final String? helperText;
   
 
   const CustomTextFormField({
@@ -19,7 +23,11 @@ class CustomTextFormField extends StatelessWidget {
     this.onChange, 
     this.validator, 
     this.icon, 
-    this.obscureText=false
+    this.obscureText=false,
+    this.readOnly=false,
+    this.onTap,
+    this.controller,
+    this.helperText
   });
 
   @override
@@ -33,9 +41,12 @@ class CustomTextFormField extends StatelessWidget {
 
 
     return TextFormField(
+      controller: controller,
+      onTap: onTap ,
       onChanged:  onChange,
       validator: validator,
       obscureText: obscureText,
+      readOnly: readOnly,
 
       decoration: InputDecoration(
         enabledBorder: border,
@@ -48,8 +59,7 @@ class CustomTextFormField extends StatelessWidget {
         label: label != null ? Text(label!) : null,
         hintText: hint,
         errorText: errorMessage,
-      
-        
+        helperText: helperText     
       ),
     );
   }

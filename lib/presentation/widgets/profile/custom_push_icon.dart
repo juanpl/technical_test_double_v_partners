@@ -1,37 +1,39 @@
 import 'package:flutter/material.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomPushIcon extends StatelessWidget {
 
-  final String text;
-  final bool? enable;
+  final IconData? icon;
   final Function()? onPress;
+  final Color? color;
+  final bool? enable;
 
-  const CustomButton({
+  const CustomPushIcon ({
     super.key, 
-    required this.text, 
-    this.enable=true, 
-    this.onPress,
+    this.icon, 
+    this.onPress, 
+    this.color = Colors.blue, 
+    this.enable = true,
+    
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: enable == true ? Colors.red : Colors.grey,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
-        onTap: enable == true ? onPress:null,
+        onTap: enable==true ? onPress:null,
         borderRadius: BorderRadius.circular(10),
         child: Container(
           width: 200,
           height: 50,
           alignment: Alignment.center,
-          child: Text(
-            text,
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          child: Icon(
+            icon,
+            size: 40,
+            color: enable==true ? color:Colors.grey,
           ),
         ),
       ),
     );
   }
-
 }
