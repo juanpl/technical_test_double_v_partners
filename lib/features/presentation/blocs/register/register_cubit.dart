@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
+import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/inputs.dart';
 
 part 'register_state.dart';
@@ -19,7 +21,6 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     ]);
 
     final stateErrorListAdrees = state.addressList.isEmpty;
-
     final bothAreValid = isValid && !stateErrorListAdrees;
 
     emit(
@@ -36,6 +37,50 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     );
 
   }
+
+  void closeMessageWindow() {
+      emit(
+        state.copyWith(
+          formStatus: FormStatus.valid,
+          messageInf: ''
+        )
+      );
+  }
+
+  void suscribeUser() async{
+    User newUser = User(
+      firstName: state.firstName.value, 
+      lastName: state.lastName.value, 
+      birthdate: state.birthdate.value, 
+      email: state.email.value, 
+      password: state.password.value, 
+      addresses: state.addressList
+    );
+
+    final int userId = await UsersLocalDataSource.db.newUser(newUser);
+    print('userId: ${userId}');
+
+    if(userId == 0) {
+      emit(
+        state.copyWith(
+          formStatus: FormStatus.dbError,
+          titleMessageInf: 'Error',
+          messageInf: 'El usuario ya está registrado'
+        )
+      );
+    }
+
+    else {
+      emit(
+        state.copyWith(
+          formStatus: FormStatus.suscribed,
+          titleMessageInf: 'Bienvenido',
+          messageInf: 'El registro fue exitoso'
+        )
+      );
+    }
+  }
+
 
   void firstNameChanged( String value){
 

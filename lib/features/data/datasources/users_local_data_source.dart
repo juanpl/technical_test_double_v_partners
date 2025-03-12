@@ -70,8 +70,11 @@ class UsersLocalDataSource {
       return 0;
     }
 
+    final Map<String, dynamic> userMap = Map.of(newUser.toJson()); // Hacer una copia del JSON
+    userMap.remove('addresses');
+
     final db = await database;
-    final userId = await db!.insert('Users', newUser.toJson().remove('addresses'));
+    final userId = await db!.insert('Users', userMap);
     
     var batch = db.batch(); // Iniciar batch para insertar varias direcciones
 

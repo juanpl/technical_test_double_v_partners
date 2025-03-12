@@ -19,15 +19,43 @@ class SignUpScreen extends StatelessWidget {
     UsersLocalDataSource.db.database;
     
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Nuevo usuario'),
-          
-      ),
       body: BlocProvider(
         create: (context) => RegisterCubit(),
-        child: const _RegisterView()
+        child: const _StackView()
       ),
     );
+  }
+}
+
+class _StackView extends StatelessWidget {
+  const _StackView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final registerCubit = context.watch<RegisterCubit>();
+    final formStatus = registerCubit.state.formStatus;
+
+    return Stack(children: [
+      _RegisterView(),
+      if(formStatus == FormStatus.validating)
+      CustomLoadingView(),
+      if(formStatus == FormStatus.dbError||formStatus == FormStatus.suscribed)
+      CustomMessageWindow(
+        title: registerCubit.state.titleMessageInf,
+        message: registerCubit.state.messageInf,
+        onPress: (){
+          if(formStatus == FormStatus.dbError){
+            registerCubit.closeMessageWindow();
+          }
+          else if(formStatus == FormStatus.suscribed){
+            context.replace('/profile_features');
+          }
+          
+        },
+      )
+
+
+    ],);
   }
 }
 
@@ -237,7 +265,7 @@ class _RegisterForm extends StatelessWidget {
             onPress: (){
               registerCubit.onSubmit();
               if(registerCubit.state.isValid){
-                context.push('/profile_features');
+                registerCubit.suscribeUser();
               }
             },
             text: 'Suscribirse',
