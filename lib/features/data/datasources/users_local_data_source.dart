@@ -61,7 +61,15 @@ class UsersLocalDataSource {
 
   }
 
+
   Future<int> newUser(User newUser) async {
+
+    final  userExist = await checkUserExist(newUser.email);
+
+    if(userExist==true){
+      return 0;
+    }
+
     final db = await database;
     final userId = await db!.insert('Users', newUser.toJson().remove('addresses'));
     
@@ -74,6 +82,43 @@ class UsersLocalDataSource {
     await batch.commit(noResult: true);
 
     return userId;
+  }
+
+
+  Future<bool> checkUserExist(String email) async {
+    final db = await database;
+    final res = await db!.query('Users', where: 'email = ?', whereArgs: [email]);
+
+    return res.isNotEmpty
+            ? true
+            : false;
+  }
+
+
+
+  Future<User?> getUserByEmailAndPassword ( String email, String password) async{
+
+    final db = await database;
+    final res = await db!.query('Users', where: 'email = ? AND password = ?', whereArgs: [email, password]);
+
+    if(res.isEmpty) return null;
+
+    Map<String, Object?> jsonUserTable = res.first;
+
+    final res2 = await db!.query('Address', where: 'user_id = ?', whereArgs: [jsonUserTable['user_id']]);
+    Map<String, Object?> jsonAddressTable = res.first;
+
+    Map<String, Object?> jsonUser = {
+      "first_name": jsonUserTable['first_name'],
+      "last_name": jsonUserTable['last_name'],
+      "birthdate": jsonUserTable['birthdate'],
+      "email": jsonUserTable['email'],
+      "password": jsonUserTable['password'],
+      "addresses": jsonAddressTable
+    };
+
+    return User.fromJson(jsonUser);
+     
   }
 
 }
