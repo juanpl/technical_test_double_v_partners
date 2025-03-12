@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/register/register_cubit.dart';
 import 'package:technical_test_double_v_partners/features/presentation/widgets/widgets.dart';
 
 
 class SignUpScreen extends StatelessWidget {
+  
 
   static const String name = 'sign_up_screen';
 
@@ -13,6 +15,9 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    UsersLocalDataSource.db.database;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Nuevo usuario'),
@@ -64,6 +69,8 @@ class _RegisterForm extends StatelessWidget {
     final password = registerCubit.state.password;
     final email = registerCubit.state.email;
     final address = registerCubit.state.address;
+
+    
     
     context.select((RegisterCubit value){
       _dateController.text = value.state.birthdate.value;
