@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:technical_test_double_v_partners/presentation/blocs/register/register_cubit.dart';
-import 'package:technical_test_double_v_partners/presentation/widgets/widgets.dart';
+import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
+import 'package:technical_test_double_v_partners/features/presentation/blocs/register/register_cubit.dart';
+import 'package:technical_test_double_v_partners/features/presentation/widgets/widgets.dart';
 
 
 class SignUpScreen extends StatelessWidget {
+  
 
   static const String name = 'sign_up_screen';
 
@@ -13,16 +15,50 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    UsersLocalDataSource.db.database;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Nuevo usuario'),
-          
       ),
       body: BlocProvider(
         create: (context) => RegisterCubit(),
-        child: const _RegisterView()
+        child: const _StackView()
       ),
     );
+  }
+}
+
+class _StackView extends StatelessWidget {
+  const _StackView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final registerCubit = context.watch<RegisterCubit>();
+    final formStatus = registerCubit.state.formStatus;
+
+    return Stack(children: [
+      _RegisterView(),
+      if(formStatus == FormStatus.validating)
+      CustomLoadingView(),
+      if(formStatus == FormStatus.dbError||formStatus == FormStatus.suscribed)
+      CustomMessageWindow(
+        title: registerCubit.state.titleMessageInf,
+        message: registerCubit.state.messageInf,
+        onPress: (){
+          if(formStatus == FormStatus.dbError){
+            registerCubit.closeMessageWindow();
+          }
+          else if(formStatus == FormStatus.suscribed){
+            context.replace('/profile_features');
+          }
+          
+        },
+      )
+
+
+    ],);
   }
 }
 
@@ -64,6 +100,8 @@ class _RegisterForm extends StatelessWidget {
     final password = registerCubit.state.password;
     final email = registerCubit.state.email;
     final address = registerCubit.state.address;
+
+    
     
     context.select((RegisterCubit value){
       _dateController.text = value.state.birthdate.value;
@@ -227,10 +265,10 @@ class _RegisterForm extends StatelessWidget {
           
           const SizedBox(height: 20,),
           CustomButton(
-            onPress: (){
+            onPress: () async{
               registerCubit.onSubmit();
               if(registerCubit.state.isValid){
-                context.push('/profile_features');
+                registerCubit.suscribeUser();
               }
             },
             text: 'Suscribirse',

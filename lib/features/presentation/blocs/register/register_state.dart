@@ -1,6 +1,6 @@
 part of 'register_cubit.dart';
 
-enum FormStatus {invalid, valid, validating, posting}
+enum FormStatus {invalid, valid, validating, posting, dbError, suscribed}
 
 class RegisterFormState extends Equatable {
   
@@ -15,6 +15,8 @@ class RegisterFormState extends Equatable {
   final bool andressInputVisibility;
   final List<String> addressList;
   final bool stateErrorListAdrees;
+  final String messageInf;
+  final String titleMessageInf;
 
   const RegisterFormState({
     this.formStatus = FormStatus.invalid, 
@@ -27,7 +29,10 @@ class RegisterFormState extends Equatable {
     this.address = const Address.pure(),
     this.andressInputVisibility = false,
     this.addressList = const [],
-    this.stateErrorListAdrees = false
+    this.stateErrorListAdrees = false,
+    this.messageInf = '',
+    this.titleMessageInf = ''
+    
   });
 
   RegisterFormState copyWith({
@@ -42,6 +47,8 @@ class RegisterFormState extends Equatable {
     bool? andressInputVisibility,
     List<String>? addressList,
     bool? stateErrorListAdrees,
+    String? messageInf,
+    String? titleMessageInf,
   }) => RegisterFormState(
     formStatus: formStatus ?? this.formStatus,
     isValid: isValid ?? this.isValid,
@@ -53,11 +60,13 @@ class RegisterFormState extends Equatable {
     address: address ?? this.address,
     andressInputVisibility: andressInputVisibility ?? this.andressInputVisibility,
     addressList: addressList ?? this.addressList,
-    stateErrorListAdrees: stateErrorListAdrees ?? this.stateErrorListAdrees
+    stateErrorListAdrees: stateErrorListAdrees ?? this.stateErrorListAdrees,
+    messageInf: messageInf ?? this.messageInf,
+    titleMessageInf: titleMessageInf ?? this.titleMessageInf
   );
     
 
   @override
-  List<Object> get props => [formStatus, isValid, firstName, lastName, birthdate, email, password, address, andressInputVisibility, addressList, email, stateErrorListAdrees];
+  List<Object> get props => [formStatus, isValid, firstName, lastName, birthdate, email, password, address, andressInputVisibility, addressList, email, stateErrorListAdrees, messageInf, titleMessageInf];
 }
 
