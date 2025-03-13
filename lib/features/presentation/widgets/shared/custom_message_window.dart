@@ -19,7 +19,7 @@ class CustomMessageWindow extends StatelessWidget {
         color: Colors.black45,
         child: Center(
           child: Container(
-            width: 200,
+            width: 250,
             height: 200,
             decoration: BoxDecoration(
               color: Colors.white,

@@ -25,7 +25,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
 
     emit(
       state.copyWith(
-        formStatus: FormStatus.validating,
+        formStatus: bothAreValid ? FormStatus.validating : FormStatus.invalid,
         firstName: FirstName.dirty(state.firstName.value),
         lastName: LastName.dirty(state.lastName.value),
         birthdate: Birthdate.dirty(state.birthdate.value),

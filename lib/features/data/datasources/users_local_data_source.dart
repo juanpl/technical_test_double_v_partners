@@ -1,4 +1,5 @@
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -49,7 +50,7 @@ class UsersLocalDataSource {
         ''');
 
         await db.execute('''
-          CREATE TABLE Address(
+          CREATE TABLE Addresses(
             id INTEGER PRIMARY KEY,
             user_id INTEGER,
             address TEXT 
@@ -76,15 +77,28 @@ class UsersLocalDataSource {
     final db = await database;
     final userId = await db!.insert('Users', userMap);
     
-    var batch = db.batch(); // Iniciar batch para insertar varias direcciones
 
-    for (String address in newUser.addresses) {
-      batch.insert("Address", {"user_id": userId, "address": address});
-    }
-
-    await batch.commit(noResult: true);
+    List<int>addressIdList = await addAddressItems(userId, newUser.addresses, db);
 
     return userId;
+  }
+
+  Future<List<int>> addAddressItems(int userId, List<String> addresses, Database? db) async{
+
+    List<int> addressIdList = [];
+    
+    for(String address in addresses){
+
+      Map<String, Object?> jsonAddress = {
+        'user_id': userId,
+        'address': address
+      };
+
+      final addressId = await db!.insert('Addresses', jsonAddress);
+      addressIdList.add(addressId);
+    }
+
+    return addressIdList;
   }
 
 
@@ -108,8 +122,11 @@ class UsersLocalDataSource {
 
     Map<String, Object?> jsonUserTable = res.first;
 
-    final res2 = await db!.query('Address', where: 'user_id = ?', whereArgs: [jsonUserTable['user_id']]);
-    Map<String, Object?> jsonAddressTable = res.first;
+    int jsonUserTableUserId = jsonUserTable['id'] as int;
+
+    final addressJsonList = await db!.query('Addresses', columns: ['address'], where: 'user_id = ?', whereArgs: [jsonUserTableUserId]);
+
+    List<String> addresses = addressJsonList.map((row) => row['address'] as String).toList();
 
     Map<String, Object?> jsonUser = {
       "first_name": jsonUserTable['first_name'],
@@ -117,10 +134,12 @@ class UsersLocalDataSource {
       "birthdate": jsonUserTable['birthdate'],
       "email": jsonUserTable['email'],
       "password": jsonUserTable['password'],
-      "addresses": jsonAddressTable
+      "addresses": addresses
     };
+ 
+    User user = User.fromJson(jsonUser);
 
-    return User.fromJson(jsonUser);
+    return user;
      
   }
 

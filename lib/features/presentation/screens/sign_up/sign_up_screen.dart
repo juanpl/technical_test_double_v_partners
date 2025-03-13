@@ -19,6 +19,9 @@ class SignUpScreen extends StatelessWidget {
     UsersLocalDataSource.db.database;
     
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Nuevo usuario'),
+      ),
       body: BlocProvider(
         create: (context) => RegisterCubit(),
         child: const _StackView()
@@ -262,7 +265,7 @@ class _RegisterForm extends StatelessWidget {
           
           const SizedBox(height: 20,),
           CustomButton(
-            onPress: (){
+            onPress: () async{
               registerCubit.onSubmit();
               if(registerCubit.state.isValid){
                 registerCubit.suscribeUser();
