@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/register/register_cubit.dart';
+import 'package:technical_test_double_v_partners/features/presentation/screens/screens.dart';
 import 'package:technical_test_double_v_partners/features/presentation/widgets/widgets.dart';
 
 
@@ -37,6 +38,8 @@ class _StackView extends StatelessWidget {
   Widget build(BuildContext context) {
     final registerCubit = context.watch<RegisterCubit>();
     final formStatus = registerCubit.state.formStatus;
+    final email = registerCubit.state.email;
+    final password = registerCubit.state.password;
 
     return Stack(children: [
       _RegisterView(),
@@ -51,7 +54,10 @@ class _StackView extends StatelessWidget {
             registerCubit.closeMessageWindow();
           }
           else if(formStatus == FormStatus.suscribed){
-            context.replace('/profile_features');
+            context.pushNamed(
+              ProfileScreen.name,
+              queryParameters: {'email': email.value, 'password': password.value},
+            );
           }
           
         },

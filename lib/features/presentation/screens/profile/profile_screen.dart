@@ -8,21 +8,30 @@ import 'package:technical_test_double_v_partners/features/presentation/widgets/w
 class ProfileScreen extends StatelessWidget {
 
   static const name = 'profile_screen';
+  final String? email;
+  final String? password;
 
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required this.email, required this.password}); 
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _ProfileView(),
+      body: _ProfileView(email: email, password: password),
     );
   }
 
 }
 
 class _ProfileView extends StatelessWidget {
+
+  final String? email;
+  final String? password;
+
   const _ProfileView({
-    super.key,
+    super.key, 
+    required this.email, 
+    required this.password,
   });
 
   @override
@@ -50,11 +59,11 @@ class _ProfileView extends StatelessWidget {
               SizedBox(height: 20,),
 
               CustomProfileSubtitleText(text: 'Correo'),
-              CustomItemInfoProfile(text: 'juanpablolasprillacorrea@gmail.com', icon: Icons.mail),
+              CustomItemInfoProfile(text: email!, icon: Icons.mail),
               SizedBox(height: 20,),
 
               CustomProfileSubtitleText(text: 'Contraseña'),
-              CustomItemInfoProfile(text: '********', icon: Icons.lock),
+              CustomItemInfoProfile(text: password!, icon: Icons.lock),
               SizedBox(height: 20,),
 
               CustomProfileSubtitleText(text: 'Direcciones'),

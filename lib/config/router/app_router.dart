@@ -14,7 +14,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/profile_features',
       name: ProfileScreen.name,
-      builder: (context, state) => ProfileScreen(),
+      builder: (context, state) {
+        final String? email = state.uri.queryParameters['email'];
+        final String? password = state.uri.queryParameters['password'];
+        return ProfileScreen(email: email, password: password);
+      },
     ),
 
     GoRoute(
