@@ -140,7 +140,10 @@ class _LoginForm extends StatelessWidget {
               if(authCubit.state.isValid){
                 bool successfullyLoggedState = await authCubit.successfullyLogged();
                 if(successfullyLoggedState){
-                  context.push('/profile_features');
+                  context.pushNamed(
+                    ProfileScreen.name,
+                    queryParameters: {'email': email.value, 'password': password.value},
+                  );
                 }
               }
             },
