@@ -45,12 +45,22 @@ class AuthCubit extends Cubit<AuthState> {
 
     else{
 
+      emit(
         state.copyWith(
           formStatus: FormStatus.dbError,
-        );
+        )
+      );
 
       return false;
     }
+  }
+
+  void closeWindoMessage(){
+      emit(
+        state.copyWith(
+          formStatus: FormStatus.invalid,
+        )
+      );
   }
 
 

@@ -29,15 +29,27 @@ class _LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    
+
     final authCubit = context.watch<AuthCubit>();
+    final formField = authCubit.state.formStatus;
+
+
     return SafeArea(
       child: Stack(
         children: [
           _LoginUI(authCubit: authCubit),
-          if(false)
+          if(formField == FormStatus.validating)
           CustomLoadingView(),
-          if(false)
-          CustomMessageWindow(message: 'El email o la contraseña son incorrectas', title: 'Error')
+          if(formField == FormStatus.dbError)
+          CustomMessageWindow(
+            message: 'El correo electrónico o la contraseña son incorrectos', 
+            title: 'Error',
+            onPress: (){
+              authCubit.closeWindoMessage();
+            },
+          )
         ] 
       ),
     );
@@ -125,11 +137,12 @@ class _LoginForm extends StatelessWidget {
             text: 'Ingresar',
             onPress: () async{
               authCubit.onSubmit();
-              bool successfullyLoggedState = await authCubit.successfullyLogged();
-              if(successfullyLoggedState){
-                context.push('/profile_features');
+              if(authCubit.state.isValid){
+                bool successfullyLoggedState = await authCubit.successfullyLogged();
+                if(successfullyLoggedState){
+                  context.push('/profile_features');
+                }
               }
-
             },
           ),
           SizedBox(

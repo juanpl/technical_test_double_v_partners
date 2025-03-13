@@ -10,7 +10,7 @@ class AuthState extends Equatable {
   final bool isValid;
 
   const AuthState({
-    this.formStatus = FormStatus.validating, 
+    this.formStatus = FormStatus.invalid, 
     this.email = const Email.pure(), 
     this.password = const Password.pure(), 
     this.isValid = true,
