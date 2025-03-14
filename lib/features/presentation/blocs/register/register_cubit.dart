@@ -5,6 +5,7 @@ import 'package:formz/formz.dart';
 import 'package:technical_test_double_v_partners/config/utils/password_hasher.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
 import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/persistent_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/inputs.dart';
 
@@ -13,8 +14,12 @@ part 'register_state.dart';
 class RegisterCubit extends Cubit<RegisterFormState> {
 
   final AuthRepository authRepository;
+  final PersistentRepository persistentRepository;
   
-  RegisterCubit(this.authRepository) : super(const RegisterFormState());
+  RegisterCubit(
+    this.authRepository, 
+    this.persistentRepository
+  ) : super(const RegisterFormState());
 
   
 
@@ -83,6 +88,9 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     }
 
     else {
+      newUser.password='';
+      persistentRepository.setUserInfo(newUser);
+
       emit(
         state.copyWith(
           formStatus: FormStatus.suscribed,

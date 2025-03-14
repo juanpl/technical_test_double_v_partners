@@ -4,6 +4,7 @@ import 'package:formz/formz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
 import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/persistent_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/inputs.dart';
 
@@ -12,8 +13,9 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
 
   final AuthRepository authRepository;
+  final PersistentRepository persistentRepository;
 
-  AuthCubit(this.authRepository) : super(AuthState());
+  AuthCubit(this.authRepository, this.persistentRepository) : super(AuthState());
 
 
 
@@ -40,6 +42,10 @@ class AuthCubit extends Cubit<AuthState> {
     User? userLogged = await authRepository.loginUser(state.email.value, state.password.value);
 
     if(userLogged != null){
+
+      userLogged.password = '';
+      persistentRepository.setUserInfo(userLogged);
+
       emit(
         state.copyWith(
           formStatus: FormStatus.joined,
@@ -56,7 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       return false;
     }
-    
+
   }
 
   void closeWindoMessage(){

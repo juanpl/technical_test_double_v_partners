@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/persistent_repository.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/auth/auth_cubit.dart';
 import 'package:technical_test_double_v_partners/features/presentation/screens/screens.dart';
 import 'package:technical_test_double_v_partners/features/presentation/widgets/widgets.dart';
@@ -10,6 +11,7 @@ class LoginScreen extends StatelessWidget {
 
   static const String name = 'login_screen';
   final authRepository = AuthRepository();
+  final persistentRepository = PersistentRepository();
 
   LoginScreen({super.key});
 
@@ -17,7 +19,10 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (_) => AuthCubit(authRepository),
+        create: (_) => AuthCubit(
+          authRepository,
+          persistentRepository
+        ),
         child: _LoginView()
       ),
     );
