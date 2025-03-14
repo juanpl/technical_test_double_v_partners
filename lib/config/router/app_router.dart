@@ -26,5 +26,11 @@ final appRouter = GoRouter(
       name: SignUpScreen.name,
       builder: (context, state) => SignUpScreen(),
     ),
+
+    GoRoute(
+      path: '/check_auth',
+      name: SignUpScreen.name,
+      builder: (context, state) => SignUpScreen(),
+    ),
   ]
 );

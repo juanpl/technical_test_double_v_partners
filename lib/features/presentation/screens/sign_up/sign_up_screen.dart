@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/register/register_cubit.dart';
 import 'package:technical_test_double_v_partners/features/presentation/screens/screens.dart';
 import 'package:technical_test_double_v_partners/features/presentation/widgets/widgets.dart';
@@ -12,7 +13,9 @@ class SignUpScreen extends StatelessWidget {
 
   static const String name = 'sign_up_screen';
 
-  const SignUpScreen({super.key});
+  final authRepository = AuthRepository();
+
+  SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class SignUpScreen extends StatelessWidget {
         title: Text('Nuevo usuario'),
       ),
       body: BlocProvider(
-        create: (context) => RegisterCubit(),
+        create: (context) => RegisterCubit(authRepository),
         child: const _StackView()
       ),
     );

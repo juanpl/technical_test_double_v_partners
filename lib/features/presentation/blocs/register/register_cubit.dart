@@ -1,16 +1,26 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:formz/formz.dart';
+import 'package:technical_test_double_v_partners/config/utils/password_hasher.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/inputs.dart';
 
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterFormState> {
-  RegisterCubit() : super(const RegisterFormState());
+
+  final AuthRepository authRepository;
+  
+  RegisterCubit(this.authRepository) : super(const RegisterFormState());
+
+  
 
   void onSubmit() {
+
+    
 
     final isValid = Formz.validate([
       state.firstName,
@@ -47,7 +57,10 @@ class RegisterCubit extends Cubit<RegisterFormState> {
       );
   }
 
+
+
   void suscribeUser() async{
+
     User newUser = User(
       firstName: state.firstName.value, 
       lastName: state.lastName.value, 
@@ -57,8 +70,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
       addresses: state.addressList
     );
 
-    final int userId = await UsersLocalDataSource.db.newUser(newUser);
-    print('userId: ${userId}');
+    final int userId = await authRepository.suscribeUser(newUser);
 
     if(userId == 0) {
       emit(

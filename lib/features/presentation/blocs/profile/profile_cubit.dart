@@ -1,13 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
 
-  ProfileCubit() : super(ProfileInitial());
+  final AuthRepository authRepository;
+
+  ProfileCubit(this.authRepository) : super(ProfileInitial());
 
   Future<void> loadUserData(String email, String password) async {
     try {
@@ -45,4 +49,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
+  Future logOut() async{
+    authRepository.logOut();
+  }
 }

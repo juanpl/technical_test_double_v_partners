@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/birthdate.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/profile/profile_cubit.dart';
 import 'package:technical_test_double_v_partners/features/presentation/screens/screens.dart';
@@ -14,14 +15,16 @@ class ProfileScreen extends StatelessWidget {
   final String? email;
   final String? password;
 
-  const ProfileScreen({super.key, required this.email, required this.password}); 
+  final authRepository = AuthRepository();
+
+  ProfileScreen({super.key, required this.email, required this.password}); 
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => ProfileCubit()..loadUserData(email!, password!),
+        create: (context) => ProfileCubit(authRepository)..loadUserData(email!, password!),
         child: _ProfileView(email: email, password: password)
       ),
     );
@@ -81,6 +84,7 @@ class _ProfileViewInfo extends StatelessWidget {
       padding:  const EdgeInsets.symmetric(horizontal: 15),
       child: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomProfileTitleText(text: 'Información Perfil',),
@@ -102,10 +106,6 @@ class _ProfileViewInfo extends StatelessWidget {
             CustomItemInfoProfile(text: email, icon: Icons.mail),
             SizedBox(height: 20,),
     
-            CustomProfileSubtitleText(text: 'Contraseña'),
-            CustomItemInfoProfile(text: password, icon: Icons.lock),
-            SizedBox(height: 20,),
-    
             CustomProfileSubtitleText(text: 'Direcciones'),
             
             ListView.builder(
@@ -118,6 +118,17 @@ class _ProfileViewInfo extends StatelessWidget {
             ),
 
             SizedBox(height: 20,),
+
+            Container(
+              alignment: Alignment.center,
+              child: CustomButton(
+                text: 'Cerrar sesión',
+                onPress: () async{
+                  profileCubit.logOut();
+                },
+              )
+            )
+
     
           ],
         ),
