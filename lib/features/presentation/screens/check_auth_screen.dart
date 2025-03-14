@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
 
 class CheckAuthScreen extends StatelessWidget {
 
@@ -8,6 +9,24 @@ class CheckAuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+
+    final authRepository = AuthRepository();
+
+    return Scaffold(
+      body: Center(
+        child: FutureBuilder(
+          future: authRepository.readToken(), 
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            
+            return(Text('Espere...'));
+
+            /*Future.microtask(){
+              context.na
+            }*/
+
+          },
+        ),
+      ),
+    );
   }
 }
