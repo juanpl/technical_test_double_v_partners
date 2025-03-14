@@ -1,16 +1,25 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:formz/formz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:technical_test_double_v_partners/features/data/datasources/users_local_data_source.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/persistent_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/inputs.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(AuthState());
 
-    void onSubmit() {
+  final AuthRepository authRepository;
+  final PersistentRepository persistentRepository;
+
+  AuthCubit(this.authRepository, this.persistentRepository) : super(AuthState());
+
+
+
+  void onSubmit() {
 
     final isValid = Formz.validate([
       state.password,
@@ -30,29 +39,30 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<bool> successfullyLogged() async{
     
-    User? userLogin = await UsersLocalDataSource.db.getUserByEmailAndPassword(state.email.value, state.password.value);
+    User? userLogged = await authRepository.loginUser(state.email.value, state.password.value);
 
-    if(userLogin != null){
+    if(userLogged != null){
+
+      userLogged.password = state.password.value; 
+      persistentRepository.setUserInfo(userLogged);
 
       emit(
         state.copyWith(
           formStatus: FormStatus.joined,
         )
       );
-
       return true;
     }
 
     else{
-
       emit(
         state.copyWith(
           formStatus: FormStatus.dbError,
         )
       );
-
       return false;
     }
+
   }
 
   void closeWindoMessage(){

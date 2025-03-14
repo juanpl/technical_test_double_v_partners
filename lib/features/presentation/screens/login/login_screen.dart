@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/persistent_repository.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/auth/auth_cubit.dart';
 import 'package:technical_test_double_v_partners/features/presentation/screens/screens.dart';
 import 'package:technical_test_double_v_partners/features/presentation/widgets/widgets.dart';
@@ -8,14 +10,19 @@ import 'package:technical_test_double_v_partners/features/presentation/widgets/w
 class LoginScreen extends StatelessWidget {
 
   static const String name = 'login_screen';
+  final authRepository = AuthRepository();
+  final persistentRepository = PersistentRepository();
 
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (_) => AuthCubit(),
+        create: (_) => AuthCubit(
+          authRepository,
+          persistentRepository
+        ),
         child: _LoginView()
       ),
     );
@@ -140,7 +147,7 @@ class _LoginForm extends StatelessWidget {
               if(authCubit.state.isValid){
                 bool successfullyLoggedState = await authCubit.successfullyLogged();
                 if(successfullyLoggedState){
-                  context.pushNamed(
+                  context.goNamed(
                     ProfileScreen.name,
                     queryParameters: {'email': email.value, 'password': password.value},
                   );

@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:path/path.dart';
+import 'package:technical_test_double_v_partners/config/utils/password_hasher.dart';
 import 'package:technical_test_double_v_partners/features/domain/entities/user.dart';
 
 
@@ -113,14 +114,20 @@ class UsersLocalDataSource {
 
 
 
-  Future<User?> getUserByEmailAndPassword ( String email, String password) async{
+  Future<User?> getUserByEmailAndPassword( String email, String password) async{
 
     final db = await database;
-    final res = await db!.query('Users', where: 'email = ? AND password = ?', whereArgs: [email, password]);
+    final res = await db!.query('Users', where: 'email = ?', whereArgs: [email]);
 
     if(res.isEmpty) return null;
 
     Map<String, Object?> jsonUserTable = res.first;
+
+    //check if the password is correct
+    String jsonHashPassword = jsonUserTable['password'] as String;
+    bool correctPassword = PasswordHasher.verifyPassword(password, jsonHashPassword);
+
+    if (correctPassword == false) return null;
 
     int jsonUserTableUserId = jsonUserTable['id'] as int;
 
