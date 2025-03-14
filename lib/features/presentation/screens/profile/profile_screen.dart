@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:technical_test_double_v_partners/features/data/repository/auth_repository.dart';
+import 'package:technical_test_double_v_partners/features/data/repository/persistent_repository.dart';
 import 'package:technical_test_double_v_partners/features/domain/inputs/birthdate.dart';
 import 'package:technical_test_double_v_partners/features/presentation/blocs/profile/profile_cubit.dart';
 import 'package:technical_test_double_v_partners/features/presentation/screens/screens.dart';
@@ -16,6 +17,7 @@ class ProfileScreen extends StatelessWidget {
   final String? password;
 
   final authRepository = AuthRepository();
+  final persistentRepository = PersistentRepository();
 
   ProfileScreen({super.key, required this.email, required this.password}); 
 
@@ -24,7 +26,9 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
-        create: (context) => ProfileCubit(authRepository)..loadUserData(email!, password!),
+        create: (context) => ProfileCubit(
+          authRepository, 
+          persistentRepository)..loadUserData(email!, password!),
         child: _ProfileView(email: email, password: password)
       ),
     );
@@ -124,7 +128,9 @@ class _ProfileViewInfo extends StatelessWidget {
               child: CustomButton(
                 text: 'Cerrar sesión',
                 onPress: () async{
-                  profileCubit.logOut();
+                  await profileCubit.logOut();
+                  context.go('/check_auth');
+
                 },
               )
             )

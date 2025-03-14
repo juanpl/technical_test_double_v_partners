@@ -62,7 +62,7 @@ class _StackView extends StatelessWidget {
             registerCubit.closeMessageWindow();
           }
           else if(formStatus == FormStatus.suscribed){
-            context.pushNamed(
+            context.goNamed(
               ProfileScreen.name,
               queryParameters: {'email': email.value, 'password': password.value},
             );

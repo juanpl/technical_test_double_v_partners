@@ -25,6 +25,7 @@ class AuthRepository {
       User? userLogin = await UsersLocalDataSource.db.getUserByEmailAndPassword(email, password);
 
       if(userLogin!=null){
+        userLogin.password = password;
         await storage.write(key: 'token', value: userLogin!.password);
       }
       

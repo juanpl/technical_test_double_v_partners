@@ -12,7 +12,7 @@ class PersistentDataSource {
   }
 
   static String get userInfo {
-    return _persistentUserInfo.getString('_userInfo') ?? _userInfo;
+    return _persistentUserInfo.getString('userInfo') ?? _userInfo;
   }
 
   static set userInfo( String userInfo){

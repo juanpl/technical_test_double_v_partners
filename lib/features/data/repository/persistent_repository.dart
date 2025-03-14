@@ -12,10 +12,15 @@ class PersistentRepository {
   }
 
   User getUserInfo(){
+    
     String stringJsonUser = PersistentDataSource.userInfo;
      Map<String, dynamic> jsonUser = jsonDecode(stringJsonUser);
      User userInfo = User.fromJson(jsonUser);
      return userInfo;
+  }
+
+  void cleanUserInfo(){
+    PersistentDataSource.userInfo = '';
   }
 
 }

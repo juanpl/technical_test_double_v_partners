@@ -88,7 +88,7 @@ class RegisterCubit extends Cubit<RegisterFormState> {
     }
 
     else {
-      newUser.password='';
+      newUser.password = state.password.value;
       persistentRepository.setUserInfo(newUser);
 
       emit(

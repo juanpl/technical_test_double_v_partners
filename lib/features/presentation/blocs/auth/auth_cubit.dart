@@ -43,7 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
 
     if(userLogged != null){
 
-      userLogged.password = '';
+      userLogged.password = state.password.value; 
       persistentRepository.setUserInfo(userLogged);
 
       emit(
